@@ -20,16 +20,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 14
-          cache: yarn
+          cache: npm
 
       - name: Set up Python 2.x
-        run: sudo apt-get install python2.7
-
       - name: Install Dependencies
-        run: yarn install 
+        run: npm ci
 
       - name: Build Angular Project
-        run: yarn build --if-present
+        run: npm run build --if-present
+
 
       - name: List Build Directory
         run: ls dist/
@@ -41,4 +40,4 @@ jobs:
           secretKey: ${{ secrets.SECRET_KEY }}
           region: af-south-1
           obsBucket: vuejs
-          localPath: dist/angular-conduit/browser/  # Directory for sync
+          localPath: dist/  # Directory for sync

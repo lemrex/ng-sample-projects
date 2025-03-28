@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json ./
 
+# Fix potential package-lock.json issues
+RUN rm -f package-lock.json && npm install --package-lock-only
+
 # Install dependencies using npm ci with caching
 RUN npm ci --cache .npm --prefer-offline
 
@@ -36,39 +39,3 @@ EXPOSE 80
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

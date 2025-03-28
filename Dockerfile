@@ -1,41 +1,23 @@
-# Use Node.js LTS as the base image
-FROM node:lts AS build
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json ./
+# Copy package.json and package-lock.json first for better caching
+COPY package.json ./
 
-# Fix potential package-lock.json issues
+# Remove package-lock.json (if needed) and regenerate it
 RUN rm -f package-lock.json && npm install --package-lock-only
 
-# Install dependencies using npm ci with caching
-RUN npm ci --cache .npm --prefer-offline
-
-# Copy the rest of the app files
+# Copy the rest of the application files
 COPY . .
 
-# Verify Angular installation
-RUN npx ng version
+# Install dependencies
+RUN npm install --omit=dev
 
-# Build the Angular application using npm
-RUN npm run build
+# Expose application port
+EXPOSE 3000
 
-# Serve the Angular app using Nginx
-FROM nginx:alpine
-
-# Set working directory in nginx
-WORKDIR /usr/share/nginx/html
-
-# Remove default nginx static files
-RUN rm -rf ./*
-
-# Copy built Angular app from previous stage
-COPY --from=build /app/dist .
-
-# Expose port 80 for HTTP traffic
-EXPOSE 80
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Command to run the app
+CMD ["npm", "start"]

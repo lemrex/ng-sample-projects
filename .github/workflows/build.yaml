@@ -1,0 +1,33 @@
+name: CI/CD to Huawei SWR and CCE
+
+env:
+  IMAGE_REGISTRY: swr.af-south-1.myhuaweicloud.com
+  IMAGE_REPOSITORY: ralf
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Huawei Cloud SWR
+        uses: huaweicloud/swr-login@v2.1.0
+        with:
+          access-key-id: ${{ secrets.ACCESSKEY }}
+          access-key-secret: ${{ secrets.SECRETACCESSKEY }}
+          region: af-south-1
+
+      - name: Build and push Docker image for ${{ matrix.service }}
+        run: |
+          cd ${{ matrix.service }}
+          docker build -t ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPOSITORY }}/angular:${{ github.sha }} .
+          docker push ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_REPOSITORY }}/angular:${{ github.sha }}
+
+  

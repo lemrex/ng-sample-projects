@@ -42,7 +42,7 @@ RUN npm run build
 # Stage 2: Serve the app using Nginx
 FROM nginx:alpine
 
-# Set working directory to Nginx's default static file serving location
+# Set working directory to Nginx's default static file serving locations
 WORKDIR /usr/share/nginx/html
 
 # Remove default Nginx static files

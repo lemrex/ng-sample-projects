@@ -1,4 +1,4 @@
-# Angular Sample Projects
+# Angular Sample Project
 This Project is a Collection of a Sample Projects Made By Arsen During Learning Angular. (There Are Also Some Projects After Learning Angular)
 
 ## Table of Contents:
